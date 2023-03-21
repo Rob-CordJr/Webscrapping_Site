@@ -1,4 +1,5 @@
 from bs4 import BeautifulSoup
+import pandas as pd
 import requests
 
 
@@ -34,21 +35,21 @@ class WebScraping:
         return news.find('span', attrs={'class' : 'feed-post-datetime'}).text
 
     def pick_all_news(self):
+
+        lista_noticias = []
+
         for news in self.__get_news():
             titulo = self.__get_title(news)
             sub_titulo  = self.__get_subtitle(news)
             postagem =  self.__get_datetime(news)
             link = self.__get_link(news)
-            if(titulo):
-                print('Titulo:' ,titulo)
-            if(sub_titulo):
-                print('Sub-titulo:',sub_titulo)
-            if(postagem):
-                print('Postado a: ',postagem)
-            if(link):
-                print('Link da Reportagem: ',link)
 
-            print('==================================')
+            lista_noticias.append([titulo, sub_titulo, link, postagem])
+        
+
+        
+        site_news = pd.DataFrame(lista_noticias, columns=['Titulo', 'SubTitulo', 'Link', 'Postagem'])
+        site_news.to_excel('Coleta_dados_Globo.xlsx', index=False)
 
             
          
