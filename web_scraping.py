@@ -15,30 +15,41 @@ class WebScraping:
         return soup
 
     def __get_news(self):
-        return self.soup.find_all("div", class_="_evt")
+        return self.soup.find_all('div', attrs={'class' : 'feed-post-body'})
 
     def __get_title(self, news):
-        return news.find("a", class_="feed-post-link gui-color-primary gui-color-hover").text
+        return news.find('div', attrs={'class' : '_evt'}).text
+    
+    def __get_link(self, news):
+        return news.find('a').get('href')
 
     def __get_subtitle(self, news):
         valor_default = ''
-        campo = news.find("span", class_="feed-post-header-chapeu")
+        campo = news.find("div", attrs={'class' : 'feed-post-body-resumo'} )
         if campo is None:
             return valor_default
         return campo.text
 
     def __get_datetime(self, news):
-        valor_default = ''
-        campo = news.find("span", class_="feed-post-datetime")
-        if campo is None:
-            return valor_default
-        return campo.text
+        return news.find('span', attrs={'class' : 'feed-post-datetime'}).text
 
     def pick_all_news(self):
         for news in self.__get_news():
-            news_info = {}
-            news_info["Titulo"] = self.__get_subtitle(news)
-            news_info["Legenda"] = self.__get_title(news)
-            news_info["Postado a:"] = self.__get_datetime(news)
-            print(news_info)
+            titulo = self.__get_title(news)
+            sub_titulo  = self.__get_subtitle(news)
+            postagem =  self.__get_datetime(news)
+            link = self.__get_link(news)
+            if(titulo):
+                print('Titulo:' ,titulo)
+            if(sub_titulo):
+                print('Sub-titulo:',sub_titulo)
+            if(postagem):
+                print('Postado a: ',postagem)
+            if(link):
+                print('Link da Reportagem: ',link)
+
+            print('==================================')
+
+            
+         
             
